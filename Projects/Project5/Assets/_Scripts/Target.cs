@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Target : MonoBehaviour
 {
-    private float verticalForce, torqueForce, spawnPos;
+    private float verticalForce, torqueForce, torqueForceX, spawnPos;
     
     private Rigidbody _rigidbody;
 
@@ -18,12 +18,13 @@ public class Target : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         spawner = GameObject.Find("SpawnManager");
 
-        verticalForce = Random.Range(10, 15);
+        verticalForce = Random.Range(12, 15);
         torqueForce = Random.Range(-20, 20);
+        torqueForceX = Random.Range(10, 20);
         spawnPos = Random.Range(-4.1f, 4.1f);
 
         _rigidbody.AddForce(Vector3.up * verticalForce, ForceMode.Impulse);
-        _rigidbody.AddTorque(torqueForce, torqueForce, torqueForce);
+        _rigidbody.AddTorque(torqueForceX, torqueForce, torqueForce);
         transform.position = new Vector3(spawnPos, spawner.transform.position.y);
     }
 

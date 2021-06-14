@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SimpleSelectedItems:
     m_Keys:
-    - Assets/_Scripts/PlayerController.cs
+    - Assets/Scenes/Gameplay.unity
+    - Assets/Scenes/MainMenu.unity
+    - Assets/Scenes/MainMenu.unity.meta
+    - ProjectSettings/ProjectSettings.asset
     - 
-    m_Values: 0101
+    m_Values: 0000000000
   RevisionSummary: 
   ChangesSearchValue: 
   SelectedHistoryRevision: 
