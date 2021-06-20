@@ -1,21 +1,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] List<GameObject> targetPrefabs;
+    [SerializeField] private List<GameObject> targetPrefabs;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private GameObject gameOverPanel, difficultPanel;
 
-    // Start is called before the first frame update
-    void Start()
+    public enum GameState
     {
+        loading,
+        inGame,
+        GameOver
+    }
+    public GameState _gameState;
+
+
+    private int _score;
+    private int score
+    {
+        set
+        {
+            _score = Mathf.Clamp(value, 0, 99999);
+        }
+        get
+        {
+            return _score;
+        }
+    }
+
+    /// <summary>
+    /// Inizia il giorno quando lo stato è "inGame"
+    /// </summary>
+    public void StartGame()
+    {
+        _gameState = GameState.inGame;
+        difficultPanel.gameObject.SetActive(false);
         StartCoroutine(SpawnTarget());
+
+        score = 0;
+        UpdateScore(0);
     }
 
     IEnumerator SpawnTarget()
     {
-        while (0 < 1)
+        while (_gameState == GameState.inGame)
         {
             int index = Random.Range(0, targetPrefabs.Count);
             yield return new WaitForSeconds(0.5f);
@@ -23,4 +56,32 @@ public class GameManager : MonoBehaviour
         }
         
     }
+
+    /// <summary>
+    /// Aggiorna il valore dei punti e lo pubblica sullo schermo
+    /// </summary>
+    /// <param name="_score"></param>
+    public void UpdateScore(int _score)
+    {
+        score += _score;
+        scoreText.text = "" + score;
+    }
+
+    /// <summary>
+    /// Attiva il pannello di Game Over
+    /// </summary>
+    public void GameOver()
+    {
+        _gameState = GameState.GameOver;
+        gameOverPanel.gameObject.SetActive(true);
+    }
+
+    /// <summary>
+    /// Reinizia la scena attualmente attiva
+    /// </summary>
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
 }
