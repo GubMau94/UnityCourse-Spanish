@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject gameOverPanel, difficultPanel;
 
+    private float spawnRate = 1f;
+
     public enum GameState
     {
         loading,
@@ -36,10 +38,11 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// Inizia il giorno quando lo stato è "inGame"
     /// </summary>
-    public void StartGame()
+    public void StartGame(int difficulty)
     {
         _gameState = GameState.inGame;
         difficultPanel.gameObject.SetActive(false);
+        spawnRate /= difficulty;
         StartCoroutine(SpawnTarget());
 
         score = 0;
@@ -51,7 +54,7 @@ public class GameManager : MonoBehaviour
         while (_gameState == GameState.inGame)
         {
             int index = Random.Range(0, targetPrefabs.Count);
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(spawnRate);
             Instantiate(targetPrefabs[index]);
         }
         

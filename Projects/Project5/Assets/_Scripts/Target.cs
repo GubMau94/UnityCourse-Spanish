@@ -11,6 +11,7 @@ public class Target : MonoBehaviour
     private GameObject spawner;
 
     private GameManager _gameManager;
+    private FollowMouse _followMouse;
     [SerializeField, Range(-100,100)] private int points;
 
 
@@ -21,11 +22,12 @@ public class Target : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody>();
         spawner = GameObject.Find("SpawnManager");
         _gameManager = FindObjectOfType<GameManager>();
+        _followMouse = FindObjectOfType<FollowMouse>();
 
         _rigidbody.AddForce(RandomVerticalForce(), ForceMode.Impulse);
         _rigidbody.AddTorque(RandomTorqueForce(), ForceMode.Impulse);
         transform.position = RandomPos();
-    }
+    }    
 
     /// <summary>
     /// Applico una forza verticale aleatoria
@@ -62,12 +64,12 @@ public class Target : MonoBehaviour
 
     private void OnMouseOver()
     {
+        
         if (Input.GetMouseButton(0) && _gameManager._gameState == GameManager.GameState.inGame)
         {
             _gameManager.UpdateScore(points);
             Instantiate(particles, transform.position, particles.transform.rotation);
             Destroy(gameObject);
-            
         }
     }
 
