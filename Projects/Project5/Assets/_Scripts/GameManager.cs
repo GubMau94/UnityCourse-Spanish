@@ -3,15 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] private List<GameObject> targetPrefabs;
+    [SerializeField] private List<GameObject> targetPrefabs, lifeNumber;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject gameOverPanel, difficultPanel;
 
+    private const string MAX_SCORE = "MAX_SCORE";
+
+    [HideInInspector]
     public int _difficultyLevel;
+    private int startingLifes = 4;
 
     private float spawnRate = 1f;
 
@@ -37,12 +42,31 @@ public class GameManager : MonoBehaviour
     }
 
     private void Start()
-    {
+    {      
         UpdateMaxScore();
     }
 
+    private void ShowLifes(int NumberOfLifes)
+    {
+            for (int i = 0; i < NumberOfLifes; i++)
+            {
+                lifeNumber[i].SetActive(true);
+            }
+    }
+
+    private void UpdateLifesLeft()
+    {
+        if(startingLifes >= 0)
+        {
+            Image heartImage = lifeNumber[startingLifes].GetComponent<Image>();
+            var tempColor = heartImage.color;
+            tempColor.a = 0.3f;
+            heartImage.color = tempColor;
+        }
+    }
+
     /// <summary>
-    /// Inizia il giorno quando lo stato è "inGame"
+    /// Inizia il gioco quando lo stato è "inGame"
     /// </summary>
     public void StartGame(int difficulty)
     {
@@ -50,6 +74,8 @@ public class GameManager : MonoBehaviour
         _gameState = GameState.inGame;
         difficultPanel.gameObject.SetActive(false);
         spawnRate /= difficulty;
+        startingLifes -= _difficultyLevel;
+        ShowLifes(startingLifes);
         StartCoroutine(SpawnTarget());
 
         Score = 0;
@@ -77,8 +103,6 @@ public class GameManager : MonoBehaviour
         scoreText.text = "" + Score;
     }
 
-    private const string MAX_SCORE = "MAX_SCORE";
-
     private void UpdateMaxScore()
     {
         int maxScore = PlayerPrefs.GetInt(MAX_SCORE, 0);
@@ -102,8 +126,15 @@ public class GameManager : MonoBehaviour
     {
         SetMaxScore();
 
-        _gameState = GameState.GameOver;
-        gameOverPanel.gameObject.SetActive(true);
+        startingLifes--;
+        UpdateLifesLeft();
+
+        if(startingLifes <= 0)
+        {
+            _gameState = GameState.GameOver;
+            gameOverPanel.gameObject.SetActive(true);
+        }
+
     }
 
     /// <summary>
