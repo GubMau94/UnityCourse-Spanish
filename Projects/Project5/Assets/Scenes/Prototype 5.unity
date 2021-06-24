@@ -350,7 +350,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf2f6a8e21a0ca42ae4e55814a148b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 3
+  _difficult: 3
 --- !u!1 &309571981
 GameObject:
   m_ObjectHideFlags: 0
@@ -1106,7 +1106,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf2f6a8e21a0ca42ae4e55814a148b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 2
+  _difficult: 2
 --- !u!1 &958712328
 GameObject:
   m_ObjectHideFlags: 0
@@ -1965,7 +1965,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abf2f6a8e21a0ca42ae4e55814a148b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 1
+  _difficult: 1
 --- !u!1 &1279674344
 GameObject:
   m_ObjectHideFlags: 0
@@ -2470,6 +2470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _particlesPrefabs: {fileID: 3260621325938669076, guid: 81d01c4f39b6cde49973f6b9c6ffbbe3, type: 3}
+  particlesCount: 0
 --- !u!4 &1535439596
 Transform:
   m_ObjectHideFlags: 0

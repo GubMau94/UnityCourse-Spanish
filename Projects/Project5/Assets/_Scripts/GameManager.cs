@@ -11,6 +11,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private GameObject gameOverPanel, difficultPanel;
 
+    public int _difficultyLevel;
+
     private float spawnRate = 1f;
 
     public enum GameState
@@ -21,9 +23,8 @@ public class GameManager : MonoBehaviour
     }
     public GameState _gameState;
 
-
     private int _score;
-    private int score
+    private int Score
     {
         set
         {
@@ -35,17 +36,23 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        UpdateMaxScore();
+    }
+
     /// <summary>
     /// Inizia il giorno quando lo stato è "inGame"
     /// </summary>
     public void StartGame(int difficulty)
     {
+        _difficultyLevel = difficulty;
         _gameState = GameState.inGame;
         difficultPanel.gameObject.SetActive(false);
         spawnRate /= difficulty;
         StartCoroutine(SpawnTarget());
 
-        score = 0;
+        Score = 0;
         UpdateScore(0);
     }
 
@@ -66,8 +73,26 @@ public class GameManager : MonoBehaviour
     /// <param name="_score"></param>
     public void UpdateScore(int _score)
     {
-        score += _score;
-        scoreText.text = "" + score;
+        Score += _score;
+        scoreText.text = "" + Score;
+    }
+
+    private const string MAX_SCORE = "MAX_SCORE";
+
+    private void UpdateMaxScore()
+    {
+        int maxScore = PlayerPrefs.GetInt(MAX_SCORE, 0);
+        scoreText.text = "" + maxScore;
+    }
+
+    private void SetMaxScore()
+    {
+        int maxScore = PlayerPrefs.GetInt(MAX_SCORE, 0);
+        if (Score > maxScore)
+        {
+            PlayerPrefs.SetInt(MAX_SCORE, Score);
+
+        }
     }
 
     /// <summary>
@@ -75,6 +100,8 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void GameOver()
     {
+        SetMaxScore();
+
         _gameState = GameState.GameOver;
         gameOverPanel.gameObject.SetActive(true);
     }

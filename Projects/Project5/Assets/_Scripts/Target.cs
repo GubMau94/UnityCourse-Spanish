@@ -12,6 +12,7 @@ public class Target : MonoBehaviour
 
     private GameManager _gameManager;
     private FollowMouse _followMouse;
+
     [SerializeField, Range(-100,100)] private int points;
 
 
@@ -23,6 +24,7 @@ public class Target : MonoBehaviour
         spawner = GameObject.Find("SpawnManager");
         _gameManager = FindObjectOfType<GameManager>();
         _followMouse = FindObjectOfType<FollowMouse>();
+        
 
         _rigidbody.AddForce(RandomVerticalForce(), ForceMode.Impulse);
         _rigidbody.AddTorque(RandomTorqueForce(), ForceMode.Impulse);
@@ -67,7 +69,7 @@ public class Target : MonoBehaviour
         
         if (Input.GetMouseButton(0) && _gameManager._gameState == GameManager.GameState.inGame)
         {
-            _gameManager.UpdateScore(points);
+            _gameManager.UpdateScore(points * _gameManager._difficultyLevel);
             Instantiate(particles, transform.position, particles.transform.rotation);
             Destroy(gameObject);
         }
