@@ -28,6 +28,8 @@ public class PlayerController : MonoBehaviour
     private Joystick _joystick;
     private Joybutton _joybutton;
 
+    private SpawnManager _spawnManager;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,22 +37,27 @@ public class PlayerController : MonoBehaviour
 
         _joystick = FindObjectOfType<Joystick>();
         _joybutton = FindObjectOfType<Joybutton>();
+
+        _spawnManager = FindObjectOfType<SpawnManager>();
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        
-        verticalInput = _joystick.Vertical + Input.GetAxis("Vertical");
-        horizontalInput = _joystick.Horizontal + Input.GetAxis("Horizontal");
-
-        _rigidbody.AddForce(origin.transform.forward * movementForce * verticalInput * Time.fixedDeltaTime, ForceMode.Force);
-        _rigidbody.AddForce(origin.transform.right * movementForce * horizontalInput * Time.fixedDeltaTime, ForceMode.Force);
-
-        foreach (GameObject indicator in powerUpIndicators)
+        if(_spawnManager.gameState == SpawnManager.GameState.inGame)
         {
-            indicator.transform.position = transform.position + 0.5f * Vector3.down;
+            verticalInput = _joystick.Vertical + Input.GetAxis("Vertical");
+            horizontalInput = _joystick.Horizontal + Input.GetAxis("Horizontal");
+
+            _rigidbody.AddForce(origin.transform.forward * movementForce * verticalInput * Time.fixedDeltaTime, ForceMode.Force);
+            _rigidbody.AddForce(origin.transform.right * movementForce * horizontalInput * Time.fixedDeltaTime, ForceMode.Force);
+
+            foreach (GameObject indicator in powerUpIndicators)
+            {
+                indicator.transform.position = transform.position + 0.5f * Vector3.down;
+            }
         }
+        
     }
 
     private void Update()

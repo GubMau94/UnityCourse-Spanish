@@ -18,14 +18,24 @@ public class SpawnManager : MonoBehaviour
 
     private bool startNewWave;
 
-    private Text _waveText;    
-
-    // Start is called before the first frame update
-    void Start()
+    private Text _waveText; 
+    
+    public enum GameState
     {
+        loading,
+        inGame,
+        GameOver
+    }
+    public GameState gameState;
+
+    public void StartGame()
+    {
+        gameState = GameState.inGame;
         StartCoroutine(EnemySpawn(wave));
         _waveText = GameObject.Find("Wave").GetComponent<Text>();
+
     }
+
 
     void Update()
     {
@@ -50,24 +60,27 @@ public class SpawnManager : MonoBehaviour
     /// </summary>
     private void NewWave()
     {
-        enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
-        if (enemyCount == 0 || startNewWave)
+        if(gameState == GameState.inGame)
         {
-            StopCoroutine(StartNewWave());
-
-            int index = Random.Range(0, powerPrefab.Length);
-
-            wave++;
-            StartCoroutine(EnemySpawn(wave));
-
-            int numPowers = Random.Range(0, 3);
-            for (int i = 0; i < numPowers; i++)
+            enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
+            if (enemyCount == 0 || startNewWave)
             {
-                Instantiate(powerPrefab[index], GenerateSpawnPos(), powerPrefab[index].transform.rotation);
-            }
+                StopCoroutine(StartNewWave());
 
-            startNewWave = false;
-            _waveText.text = "Wave: " + wave;
+                int index = Random.Range(0, powerPrefab.Length);
+
+                wave++;
+                StartCoroutine(EnemySpawn(wave));
+
+                int numPowers = Random.Range(0, 3);
+                for (int i = 0; i < numPowers; i++)
+                {
+                    Instantiate(powerPrefab[index], GenerateSpawnPos(), powerPrefab[index].transform.rotation);
+                }
+
+                startNewWave = false;
+                _waveText.text = "Wave: " + wave;
+            }
         }
     }
 

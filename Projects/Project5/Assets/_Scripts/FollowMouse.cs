@@ -82,7 +82,7 @@ public class FollowMouse : MonoBehaviour
         while (mousePressed)
         {
             Instantiate(_particlesPrefabs, transform.position, _particlesPrefabs.transform.rotation);
-            yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.01f);
         }
     }
 
