@@ -42,6 +42,15 @@ public class GameManagerX : MonoBehaviour
         ShowMaxScore();
     }
 
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.R))
+        {
+            PlayerPrefs.DeleteKey(MAX_SCORE);
+            ShowMaxScore();
+        }
+    }
+
 
     // Start the game, remove title screen, reset score, and adjust spawnRate based on difficulty button clicked
     public void StartGame(int difficulty)
