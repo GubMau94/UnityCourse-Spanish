@@ -12,13 +12,16 @@ public class SpawnManager : MonoBehaviour
 
     private int wave = 1;
     private int enemyCount;
+    private int timer;
+    private int newWaveSpawnTimer = 60;
 
     private int nextEnemy = 5;
     private int enemyType = 1;
 
     private bool startNewWave;
 
-    private Text _waveText; 
+    private Text _waveText;
+    private Text _countdownText;
     
     public enum GameState
     {
@@ -33,13 +36,15 @@ public class SpawnManager : MonoBehaviour
         gameState = GameState.inGame;
         StartCoroutine(EnemySpawn(wave));
         _waveText = GameObject.Find("Wave").GetComponent<Text>();
+        _countdownText = GameObject.Find("Countdown").GetComponent<Text>();
 
+        StartCoroutine("NextWaveCountdown");
     }
 
 
     void Update()
     {
-        NewWave();      
+        NewWave();
     }
 
 
@@ -65,6 +70,9 @@ public class SpawnManager : MonoBehaviour
             enemyCount = GameObject.FindGameObjectsWithTag("Enemy").Length;
             if (enemyCount == 0 || startNewWave)
             {
+                StopCoroutine("NextWaveCountdown");
+                StartCoroutine("NextWaveCountdown");
+
                 StopCoroutine(StartNewWave());
 
                 int index = Random.Range(0, powerPrefab.Length);
@@ -119,9 +127,20 @@ public class SpawnManager : MonoBehaviour
     /// <returns></returns>
     IEnumerator StartNewWave()
     {
-        yield return new WaitForSeconds(60f);
+        yield return new WaitForSeconds(newWaveSpawnTimer);
         startNewWave = true;
         NewWave();        
+    }
+
+    IEnumerator NextWaveCountdown()
+    {
+        timer = newWaveSpawnTimer;
+        while (timer > 0)
+        {
+            yield return new WaitForSeconds(1f);
+            timer--;
+            _countdownText.text = "" + timer;
+        }
     }
 
 } //class

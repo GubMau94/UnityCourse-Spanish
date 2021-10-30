@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
@@ -23,10 +24,15 @@ public class PlayerController : MonoBehaviour
     private float verticalInput;
     private float horizontalInput;
 
+    public static int gold;
+    public static string GOLD = "GOLD";
+    private Text _goldText;
+
     private bool onGround = true;
 
     private Joystick _joystick;
     private Joybutton _joybutton;
+    [SerializeField] private GameObject joystickPos;
 
     private SpawnManager _spawnManager;
 
@@ -39,6 +45,10 @@ public class PlayerController : MonoBehaviour
         _joybutton = FindObjectOfType<Joybutton>();
 
         _spawnManager = FindObjectOfType<SpawnManager>();
+
+        _goldText = GameObject.Find("Gold").GetComponent<Text>();
+
+        gold = PlayerPrefs.GetInt("GOLD"); ;
     }
 
     // Update is called once per frame
@@ -67,8 +77,23 @@ public class PlayerController : MonoBehaviour
             _rigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
             onGround = false;
         }
+
+        _goldText.text = "Gold: " + gold;
+
+        JoystickPosition();
     }
 
+    private void JoystickPosition()
+    {
+        if (MainMenuManager.joystickLeft)
+        {
+            joystickPos.transform.position = new Vector3(350,350,0);
+        } 
+        else
+        {
+            joystickPos.transform.position = new Vector3(1800, 350);
+        }
+    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -92,6 +117,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(PowerUpIndicator());
         }
 
+        //Evita che il player cada dall'arena
         if (other.CompareTag("wallPower") && !wallPowerActive)
         {
             wallPowerActive = true;
@@ -100,6 +126,14 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
 
             StartCoroutine(PowerUpIndicator());
+        }
+
+        if (other.CompareTag("goldPower"))
+        {
+            gold += 5;
+            PlayerPrefs.SetInt(GOLD, gold);
+
+            Destroy(other.gameObject);
         }
 
         //Se il player esce dalla mappa rinizia il gioco
