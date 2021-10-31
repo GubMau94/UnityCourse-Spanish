@@ -49,4 +49,11 @@ public class Observer : MonoBehaviour
             isPlayerInRange = false;
         }
     }
+
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, player.position);
+        Gizmos.DrawSphere(transform.position, 0.1f);
+    }
 }

@@ -9,8 +9,9 @@ public class GameEnding : MonoBehaviour
     [SerializeField] float displayImageDuration = 1.0f;
     [SerializeField] GameObject player;
     [SerializeField] CanvasGroup exitBackgroundImageCanvasGroup, caughtBackgroundCanvasGroup;
+    [SerializeField] AudioSource exitAudio, caughtAudio;
 
-    private bool isPlayerAtExit, isPlayerCaught;
+    private bool isPlayerAtExit, isPlayerCaught, hasAudioPlayed;
     private float timer;
 
     private void OnTriggerEnter(Collider other)
@@ -25,11 +26,11 @@ public class GameEnding : MonoBehaviour
     {
         if (isPlayerAtExit)
         {
-            EndLevel(exitBackgroundImageCanvasGroup, false);
+            EndLevel(exitBackgroundImageCanvasGroup, false, exitAudio);
         } 
         else if (isPlayerCaught)
         {
-            EndLevel(caughtBackgroundCanvasGroup, true);
+            EndLevel(caughtBackgroundCanvasGroup, true, caughtAudio);
         }
     }
 
@@ -37,8 +38,14 @@ public class GameEnding : MonoBehaviour
     /// Lancia l'immagine di fine partita
     /// </summary>
     /// <param name="imageCanvasGroup">Immagine di fine partite corrispondente</param>
-    void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart)
+    void EndLevel(CanvasGroup imageCanvasGroup, bool doRestart, AudioSource audioSource)
     {
+        if (!hasAudioPlayed)
+        {
+            audioSource.Play();
+            hasAudioPlayed = true;
+        }
+
         timer += Time.deltaTime;
         imageCanvasGroup.alpha = timer / fadeDuration;
 
