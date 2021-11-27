@@ -1,3 +1,8 @@
+#if UNITY_IOS || UNITY_ANDROID
+    #define using_mobile
+#endif
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,13 +26,27 @@ public class PlayerController : MonoBehaviour
         _animator = GetComponent<Animator>();
         _rigidbody = GetComponent<Rigidbody>();
         _audioSource = GetComponent<AudioSource>();
+
     }
 
     void FixedUpdate()
     {
+    #if using_mobile
+        float horizontal = Input.GetAxis("Mouse X");
+        float vertical = Input.GetAxis("Mouse Y");
+        if(Input.touchCount > 0)
+        {
+            horizontal = Input.touches[0].deltaPosition.x;
+            vertical = Input.touches[0].deltaPosition.y;        
+        }
+    #else
         float horizontal = Input.GetAxisRaw("Horizontal");
         float vertical = Input.GetAxisRaw("Vertical");
-        
+    #endif
+
+
+
+
         movement.Set(horizontal, 0, vertical);
         movement.Normalize();
 
